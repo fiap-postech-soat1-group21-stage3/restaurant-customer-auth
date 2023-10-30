@@ -15,8 +15,8 @@ provider "aws" {
 }
 
 resource "aws_iam_role" "lambda_role" {
-name   = "restaurant_auth"
-assume_role_policy = <<EOF
+  name               = "restaurant_auth"
+  assume_role_policy = <<EOF
 {
  "Version": "2012-10-17",
  "Statement": [
@@ -34,10 +34,10 @@ EOF
 }
 
 resource "aws_iam_policy" "iam_policy_for_lambda" {
- name         = "aws_iam_policy_for_terraform_aws_lambda_role"
- path         = "/"
- description  = "AWS IAM Policy for managing aws lambda role"
- policy = <<EOF
+  name        = "aws_iam_policy_for_terraform_aws_lambda_role"
+  path        = "/"
+  description = "AWS IAM Policy for managing aws lambda role"
+  policy      = <<EOF
 {
  "Version": "2012-10-17",
  "Statement": [
@@ -56,8 +56,8 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "attach_iam_policy_to_iam_role" {
- role        = aws_iam_role.lambda_role.name
- policy_arn  = aws_iam_policy.iam_policy_for_lambda.arn
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = aws_iam_policy.iam_policy_for_lambda.arn
 }
 
 // zip the binary, as we can use only zip files to AWS lambda
@@ -69,11 +69,11 @@ data "archive_file" "function_archive" {
 
 
 resource "aws_lambda_function" "terraform_lambda_func" {
-filename                       = "${path.module}/tfgenerated/auth.zip"
-function_name                  = "restaurant_auth"
-role                           = aws_iam_role.lambda_role.arn
-handler                        = "authorizer"
-runtime                        = "go1.x"
-source_code_hash = data.archive_file.function_archive.output_base64sha256
-depends_on                     = [aws_iam_role_policy_attachment.attach_iam_policy_to_iam_role]
+  filename         = "${path.module}/tfgenerated/auth.zip"
+  function_name    = "restaurant_auth"
+  role             = aws_iam_role.lambda_role.arn
+  handler          = "authorizer"
+  runtime          = "go1.x"
+  source_code_hash = data.archive_file.function_archive.output_base64sha256
+  depends_on       = [aws_iam_role_policy_attachment.attach_iam_policy_to_iam_role]
 }
