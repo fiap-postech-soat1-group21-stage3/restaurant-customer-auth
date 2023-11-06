@@ -30,11 +30,11 @@ jobs:
       - name: Download SAM
         uses: aws-actions/setup-sam@v1
 
-      - name: Create lambda .zip
-        run: ./create_zip.sh
-
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Create lambda .zip
+        run: ./create_zip.sh
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
