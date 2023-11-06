@@ -32,3 +32,16 @@ terraform apply
 
 ## Como executar o projeto pelo Github Actions
 Todas as mudanças realizadas no código e mergeadas na branch `main` iniciarão a pipeline no GitHub Actions. Essa pipeline é responsável por verificar o código e realizar o deploy dos serviços na núvem de forma automática.
+
+
+## Diagramas
+
+### Criação Lambda
+![image](https://github.com/fiap-postech-soat1-group21/restaurant-aws-lambda-auth/assets/83218983/905049f1-ead6-47f1-9da8-345ef2807841)
+
+### Criação API Gateway
+![image](https://github.com/fiap-postech-soat1-group21/restaurant-aws-lambda-auth/assets/83218983/a08cd434-29bb-461f-9c4b-8fee348d889c)
+
+### Como se comunicam entre si
+![image](https://github.com/fiap-postech-soat1-group21/restaurant-aws-lambda-auth/assets/83218983/ace2b1fb-92bf-4dde-8bc8-e9858c6622a8)
+
