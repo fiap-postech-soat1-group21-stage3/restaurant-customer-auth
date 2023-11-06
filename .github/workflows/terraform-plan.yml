@@ -27,11 +27,8 @@ jobs:
         run:
           working-directory: ./
     steps:
-      - name: Download SAM
-        uses: aws-actions/setup-sam@v1
-
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: aws-actions/setup-sam@v1
+      - uses: actions/checkout@v4
 
       - name: Create lambda .zip
         run: ./create_zip.sh

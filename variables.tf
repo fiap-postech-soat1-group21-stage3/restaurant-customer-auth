@@ -7,9 +7,6 @@ variable "AWS_SECRET_KEY" {
 variable "AWS_REGION" {
   description = "AWS region"
 }
-variable "DB_HOST" {
-  description = "Database Host"
-}
 variable "DB_PORT" {
   description = "Database Port"
 }

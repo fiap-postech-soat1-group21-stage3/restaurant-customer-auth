@@ -26,12 +26,12 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - name: Create lambda .zip
-        uses: aws-actions/setup-sam@v1
+      - uses: actions/checkout@v4
+      - uses: aws-actions/setup-sam@v1
       - run: ./create_zip.sh
 
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Create lambda .zip
+        run: ./create_zip.sh
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
