@@ -26,7 +26,9 @@ jobs:
     steps:
       - name: Create lambda .zip
         uses: aws-actions/setup-sam@v1
-      - run: ./create_zip.sh
+      - run: |
+        chmod +x ./create_zip.sh
+        ./create_zip.sh
 
       - name: Checkout
         uses: actions/checkout@v4
