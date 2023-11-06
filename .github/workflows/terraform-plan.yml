@@ -23,12 +23,15 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+    defaults:
+        run:
+          working-directory: ./
     steps:
-      - name: Create lambda .zip
+      - name: Download SAM
         uses: aws-actions/setup-sam@v1
-      - run: |
-          chmod +x create_zip.sh
-          ./create_zip.sh
+
+      - name: Create lambda .zip
+        run: ./create_zip.sh
 
       - name: Checkout
         uses: actions/checkout@v4
