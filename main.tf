@@ -1,17 +1,28 @@
 terraform {
   cloud {
     organization = "fiap-postech-soat1-group21"
+
     workspaces {
-      name = "restaurant"
+      name = "customer-auth"
     }
   }
 }
 
-#defining the provider as aws
 provider "aws" {
   region     = var.AWS_REGION
   access_key = var.AWS_ACCESS_KEY
   secret_key = var.AWS_SECRET_KEY
+}
+
+data "terraform_remote_state" "restaurant_database" {
+  backend = "remote"
+
+  config = {
+    organization = "fiap-postech-soat1-group21"
+    workspaces = {
+      name = "restaurant-database"
+    }
+  }
 }
 
 resource "aws_iam_role" "lambda_role" {
@@ -61,19 +72,28 @@ resource "aws_iam_role_policy_attachment" "attach_iam_policy_to_iam_role" {
 }
 
 // zip the binary, as we can use only zip files to AWS lambda
-data "archive_file" "function_archive" {
-  type        = "zip"
-  source_file = "${path.module}/tfgenerated/authorizer"
-  output_path = "${path.module}/tfgenerated/auth.zip"
-}
-
+# data "archive_file" "function_archive" {
+#   type        = "zip"
+#   source_file = "${path.module}/tfgenerated/authorizer"
+#   output_path = "${path.module}/tfgenerated/auth.zip"
+# }
 
 resource "aws_lambda_function" "terraform_lambda_func" {
-  filename         = "${path.module}/tfgenerated/auth.zip"
-  function_name    = "restaurant_auth"
+  filename         = "${path.module}/fullLambda.zip"
+  function_name    = "customer_auth"
   role             = aws_iam_role.lambda_role.arn
-  handler          = "authorizer"
-  runtime          = "go1.x"
-  source_code_hash = data.archive_file.function_archive.output_base64sha256
+  handler          = "app.lambda_handler"
+  runtime          = "python3.10"
+  source_code_hash = filebase64sha256("fullLambda.zip")
   depends_on       = [aws_iam_role_policy_attachment.attach_iam_policy_to_iam_role]
+  environment {
+    variables = {
+      DB_PORT        = var.DB_PORT,
+      DB_USER        = var.DB_USER,
+      DB_PASSWORD    = var.DB_PASSWORD,
+      DB_NAME        = var.DB_NAME,
+      JWT_SECRET_KEY = var.JWT_SECRET_KEY,
+      DB_HOST        = data.terraform_remote_state.restaurant_database.outputs.restaurant_database_address
+    }
+  }
 }
